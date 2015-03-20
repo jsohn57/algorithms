@@ -33,6 +33,8 @@ char res_input[250];
 char op[2];
 char result[250];
 
+int calc_error = 0;
+
 void add()
 {
 	int idx = 0;
@@ -60,7 +62,31 @@ void add()
 
 void subtract()
 {
-
+	int idx = 0;
+	int carry = 0;
+	while(left_input[idx] != '\0' || right_input[idx] != '\0'){
+		int sub_result = 0;
+		if(left_input[idx] == '\0'){
+			sub_result = right_input[idx]-48 - carry;
+		}
+		else if(right_input[idx] == '\0'){
+			sub_result = left_input[idx]-48 - carry;
+		}
+		else{
+			sub_result = (left_input[idx]-48) - (right_input[idx]-48) - carry;
+		}
+		(sub_result >= 0 ? carry = 0 : carry = 1);
+		if(sub_result < 0){
+			sub_result = -1*sub_result;
+		}
+		result[idx] = 48+((sub_result)%10);
+		printf("sub_result = %d\n carry = %d\n sub_result_remainder = %d\n result[idx] = %c\n", sub_result, carry, (sub_result)%10, result[idx]);
+		idx++;
+	}
+	if(carry != 0){
+		calc_error = 1;
+	}
+	printf("calculation error = %d\n", calc_error);
 }
 
 void reverse(char *input)
@@ -88,6 +114,7 @@ int main()
 		memset(res_input, 250, '\0');
 		memset(op, 2, '\0');
 		memset(result, 250, '\0');
+		calc_error = 0;
 		//cin >> left_input >> op >> right_input >> equal_op >> res_input;
 		cin >> left_input >> op >> right_input;
 		reverse(left_input);

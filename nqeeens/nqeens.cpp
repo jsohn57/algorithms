@@ -10,8 +10,6 @@
 
 using namespace std;
 
-using namespace std::chrono;
-
 int N = 1;
 
 bool is_qpos(PLIST queens, PAIR qpos)

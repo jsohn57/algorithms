@@ -5,8 +5,6 @@
 using namespace std;
 vector<int> NML;
 vector<int> NWL;
-//int NML[10000];
-//int NWL[10000]; 
 
 int main()
 {

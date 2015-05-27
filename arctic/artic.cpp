@@ -24,11 +24,15 @@ bool is_reachable(int D)
 		dest.pop_back();
 		visited.insert(node);
 		for(vector<PAIR>::iterator it = L.begin(); it != L.end(); it++){
-			if(visited.find(node) == visited.end() && 
-				sqrt(pow(node.first-it->first, 2.0)+pow(node.second-it->second, 2.0)) > D)
+			printf("sqrt = %f\n", sqrt(pow(node.first-it->first, 2.0)+pow(node.second-it->second, 2.0)));
+			if(visited.find(*it) == visited.end() && 
+				sqrt(pow(node.first-it->first, 2.0)+pow(node.second-it->second, 2.0)) < D){
+					printf("push_back!\n");
 					dest.push_back(node);
+			}
 		}
 	}
+	printf("L size = %lu, visited list size = %lu\n", L.size(), visited.size());
 	if(L.size() == visited.size()) return true;
 	else return false;
 }
@@ -43,14 +47,16 @@ int main()
 			L.push_back(MP(x,y));
 		}
 
-		double D = 750.0;
-		for(int i = 0; i < 100; i++){
+		double D = 0.0, min = 0.0, max = 1500;
+		for(int i = 0; i < 1; i++){
+			D = (min + max)/2;
+			printf("D = %f\n", D);
 			if(is_reachable(D)){
 				//find better answer
-				D /= 2.0;
+				max = D;
 			}
 			else{
-				D *= 1.5;
+				min = D;
 			}
 		}
 		printf("%0.2f\n", (round(D*100.0)/100.0)); 

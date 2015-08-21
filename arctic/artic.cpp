@@ -65,6 +65,6 @@ int main()
       double tmp = path(0, i, VL);
       if(max < tmp) max = tmp; 
     }
-    printf("%f\n", max); 
+    printf("%0.3f\n", max); 
   }
 }

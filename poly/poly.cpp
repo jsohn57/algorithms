@@ -2,18 +2,18 @@
 
 using namespace std;
 
-long long DP[101][101];
-long long poly(long long f, long long r) //f = number of squares in the first row, r = remaining squares that can be used
+unsigned int DP[101][101];
+unsigned int poly(unsigned int f, unsigned int r) //f = number of squares in the first row, r = remaining squares that can be used
 {
 	if(r == 0)
 		return 1;
-	long long &ret = DP[f][r];
+	unsigned int &ret = DP[f][r];
 	if(ret == 0){
-		for(long long i = 1; i <= r; i++){
+		for(unsigned int i = 1; i <= r; i++){
 			if(f == 0)
-				ret += poly(i, r-i);
+				ret = (ret + poly(i, r-i))%10000000;
 			else
-				ret += (f+i-1)*poly(i, r-i);
+				ret = (ret + (f+i-1)*poly(i, r-i))%10000000;
 		}
 	}
 	return ret;
@@ -29,6 +29,6 @@ int main()
 			}
 		}
 		cin >> n;
-		cout << "ans = " << poly(0, n) << endl;
+		cout << poly(0, n) << endl;
 	}
 }

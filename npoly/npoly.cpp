@@ -1,7 +1,7 @@
 #include <iostream>
 
 using namespace std;
-unsigned int mod = 20090711
+unsigned int mod = 20090711;
 
 unsigned int DP[101][101];
 unsigned int poly(unsigned int f, unsigned int r) //f = number of squares in the first row, r = remaining squares that can be used
@@ -42,9 +42,15 @@ int main()
 			symm = poly(0, n/2);
 
 		// case 2: if we remove the last line of each polyminos and flip, then it is symmetric
-		for(int j = 1; j < n; j++){
-			symm += poly(j, n-j);
+		for(int j = 1; j <= n; j++){
+      for(int k = 1; k <= j; k++){
+        if((2*j-k) == n){
+          symm = (symm + poly(k, j-k))%mod;        
+        }
+      }
 		}
 
+    int res = tot-symm;
+    printf("%d\n", ((res < 0)?res+mod:res));
 	}
 }

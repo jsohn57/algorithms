@@ -5,6 +5,12 @@ using namespace std;
 
 double avg[101][101];
 int A[101];
+int DP[101][101];
+
+double quantize(int i, int s) // i = array index, s = number of usable numbers remaining
+{
+
+}
 
 int main()
 {

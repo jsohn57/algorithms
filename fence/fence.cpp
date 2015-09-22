@@ -4,28 +4,8 @@
 using namespace std;
 
 int C, N;
-int U[20001]; //un-sorted array
-int F[20001]; //sorted array
-
-class Node{
-  Node():_key(0), _left(NULL), _right(NULL){};
-  Node(int key):_key(key), _left(NULL), _right(NULL){};
-
-  void insert(Node *&root, int key){
-    if(!root)
-      root = new Node(key);
-    else if(_key < key)
-      insert(root->_right, key);
-    else
-      insert(root->_left, key);
-  }
-
-
-
-  int _key;
-  Node *_left;
-  Node *_right;
-};
+int S[20001];
+int I[20001];
 
 int main()
 { 
@@ -33,40 +13,38 @@ int main()
   for(int c = 0; c < C; c++){
     cin >> N; 
     for(int i = 0; i < 20001; i++){
-      F[i] = 0;
-      U[i] = 0;
+      S[i] = -1;
+      I[i] = -1;
     }
    
-    for(int n = 0; n < N; n++){
-      cin >> F[n]; 
-      U[n] = F[n];
-    }
-    //sort
-    sort(F, F+N); 
-
+    int s_ptr = -1;
     int max = 0;
-    for(int i = 0; i < N; i++){
-      int max_area = 0, area = 0;
-      bool conn = false;
-      for(int j = 0; j < N; j++){
-        if(U[j] >= F[i]){
-          area += F[i];
-          conn = true;
-        }
-        else{
-          if(area > max_area)
-            max_area = area;
-          conn = false;
-          area = 0;
+    int n = 0;
+    for(n = 0; n < N; n++){
+      int tmp = 0;
+      int ctr = 1;
+      cin >> tmp;
+      if(s_ptr > 0){
+        while(S[--s_ptr] > tmp){ // stack pop if needed
+          //printf("max = %d, S[--s_ptr] = %d, tmp = %d, cur_ptr = %d, I[S[s_ptr]] = %d\n", max, S[s_ptr], tmp, n, I[S[s_ptr]]);
+          if(I[S[s_ptr]] > -1){
+            if(max < S[s_ptr]*(n - I[S[s_ptr]]))
+              max = S[s_ptr]*(n - I[S[s_ptr]]);
+            I[S[s_ptr]] = -1;
+          }
         }
       }
-      // end case
-      if(area > max_area)
-        max_area = area;
-      if(max_area > max)
-        max = max_area;
+      S[(++s_ptr)++] = tmp; // stack push
+      if(I[S[s_ptr-1]] == -1)
+        I[S[s_ptr-1]] = n;
     }
-
+    if(s_ptr > 0){
+      while(--s_ptr >= 0){ // stack pop if needed
+        //printf("max = %d, S[--s_ptr] = %d, cur_ptr = %d, I[S[s_ptr]] = %d\n", max, S[s_ptr], n, I[S[s_ptr]]);
+        if(max < S[s_ptr]*(n - I[S[s_ptr]]))
+          max = S[s_ptr]*(n - I[S[s_ptr]]);
+      }
+    }
     printf("%d\n", max);
   }
   return 0;

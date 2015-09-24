@@ -1,11 +1,11 @@
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
 int C, N;
-int S[20001];
-int I[20001];
+long long I[20001];
 
 int main()
 { 
@@ -13,39 +13,35 @@ int main()
   for(int c = 0; c < C; c++){
     cin >> N; 
     for(int i = 0; i < 20001; i++){
-      S[i] = -1;
       I[i] = -1;
     }
    
-    int s_ptr = -1;
-    int max = 0;
+    long long max = 0;
+    priority_queue<long long> pq;
     int n = 0;
-    for(n = 0; n < N; n++){
+    for(n = 0; n <= N; n++){
       int tmp = 0;
-      int ctr = 1;
-      cin >> tmp;
-      if(s_ptr > 0){
-        while(S[--s_ptr] > tmp){ // stack pop if needed
-          //printf("max = %d, S[--s_ptr] = %d, tmp = %d, cur_ptr = %d, I[S[s_ptr]] = %d\n", max, S[s_ptr], tmp, n, I[S[s_ptr]]);
-          if(I[S[s_ptr]] > -1){
-            if(max < S[s_ptr]*(n - I[S[s_ptr]]))
-              max = S[s_ptr]*(n - I[S[s_ptr]]);
-            I[S[s_ptr]] = -1;
-          }
+      if(n < N)
+        cin >> tmp;
+      if(tmp > 0 && I[tmp] == -1){
+        pq.push(tmp);
+        I[tmp] = n;
+      }
+      while(!pq.empty() && pq.top() > tmp){
+        if(tmp != 0 && (I[pq.top()] < I[tmp])){
+          I[tmp] = I[pq.top()];
         }
+        if(max < pq.top()*(n-I[pq.top()]))
+          max = pq.top()*(n-I[pq.top()]);
+
+        //printf("pq.size = %lu, pq.top = %lld, tmp = %d, max = %lld\n", pq.size(), pq.top(), tmp, max);
+        I[pq.top()] = -1;
+        pq.pop();
       }
-      S[(++s_ptr)++] = tmp; // stack push
-      if(I[S[s_ptr-1]] == -1)
-        I[S[s_ptr-1]] = n;
+      //printf("n = %d, tmp = %d, I[tmp] =%lld\n", n, tmp, I[tmp]);
     }
-    if(s_ptr > 0){
-      while(--s_ptr >= 0){ // stack pop if needed
-        //printf("max = %d, S[--s_ptr] = %d, cur_ptr = %d, I[S[s_ptr]] = %d\n", max, S[s_ptr], n, I[S[s_ptr]]);
-        if(max < S[s_ptr]*(n - I[S[s_ptr]]))
-          max = S[s_ptr]*(n - I[S[s_ptr]]);
-      }
-    }
-    printf("%d\n", max);
+
+    printf("%lld\n", max);
   }
   return 0;
 }

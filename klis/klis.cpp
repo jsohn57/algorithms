@@ -5,7 +5,7 @@ using namespace std;
 
 unsigned int A[501];
 int DP[501];
-int C_DP[501];
+int C_DP[501][501];
 
 int C, N, K;
 
@@ -27,7 +27,7 @@ int count(int l, int idx)
 {
   if(l == 1)
     return 1;
-  int &ret = C_DP[idx];
+  int &ret = C_DP[l][idx];
   if(ret == -1){
     ret = 0;
     for(int i = idx+1; i < N; i++){
@@ -46,7 +46,9 @@ int main()
     for(int i = 0; i < 501; i++){
       A[i] = -1;
       DP[i] = -1;
-      C_DP[i] = -1;
+      for(int j = 0; j < 501; j++){
+        C_DP[i][j] = -1;
+      }
     }
     cin >> N >> K;
     for(int i = 0; i < N; i++){

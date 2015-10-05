@@ -57,6 +57,12 @@ int main()
     
     int length = lis(-1)-1;
     printf("%d\n", length);
+		int ctr = 0;
+		int 
+		while(K > 0){
+			K = K-count(length, ctr++);	
+		}
+		
     for(int i = 0; i < N; i++){
       printf("idx = %d, count = %d\n", i, count(length, i));
     }

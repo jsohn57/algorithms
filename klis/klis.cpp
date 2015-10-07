@@ -6,12 +6,13 @@
 
 using namespace std;
 
+int KMAX = 40000;
 unsigned int A[501];
 int DP[501];
-long long C_DP[501][501];
+int C_DP[501][501];
 
 int C, N;
-long long K;
+long K;
 
 int lis(int idx)
 {
@@ -27,23 +28,25 @@ int lis(int idx)
   return ret;
 }
 
-long long count(int l, int idx)
+unsigned int count(int l, int idx)
 {
   if(l == 1)
     return 1;
-  long long &ret = C_DP[l][idx];
+  int &ret = C_DP[l][idx];
   if(ret == -1){
     ret = 0;
     for(int i = idx+1; i < N; i++){
-      if(A[i] > A[idx] && (l-1) == lis(i))
-        ret += count(l-1, i); 
+      if(A[i] > A[idx] && (l-1) == lis(i)){
+        ret = min(KMAX, ret+count(l-1, i));
+        //ret += count(l-1, i); 
+      }
     }
   }
   return ret;
 }
 
 
-void reconstruct(int idx, int length, long long order, vector<int> &v)
+void reconstruct(int idx, int length, int order, vector<int> &v)
 {
   //printf("reconstruct: idx = %d, length = %d, order = %d\n", idx, length, order);
   vector< pair<int, int> > pv;
@@ -62,7 +65,7 @@ void reconstruct(int idx, int length, long long order, vector<int> &v)
     v.push_back(it->first);
     return; 
   }
-  long long k = 0;
+  int k = 0;
   for(vector< pair<int, int> >::iterator it = pv.begin(); it != pv.end(); it++){
     k = order;
     order -= count(length-1, it->second);

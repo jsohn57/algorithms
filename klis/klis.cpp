@@ -6,10 +6,11 @@
 
 using namespace std;
 
-int KMAX = 40000;
+unsigned int KMAX = 40000;
 unsigned int A[501];
 int DP[501];
-int C_DP[501][501];
+int C_DP[501];
+//int C_DP[501][501];
 
 int C, N;
 long K;
@@ -28,6 +29,7 @@ int lis(int idx)
   return ret;
 }
 
+/*
 unsigned int count(int l, int idx)
 {
   if(l == 1)
@@ -44,11 +46,33 @@ unsigned int count(int l, int idx)
   }
   return ret;
 }
+*/
+
+unsigned int count(int idx)
+{
+  if(l == 1)
+    return 1;
+  int &ret = C_DP[idx];
+  if(ret == -1){
+    ret = 0;
+    for(int i = idx+1; i < N; i++){
+      if(A[i] > A[idx] && (l-1) == lis(i)){
+        ret = min(KMAX, ret+count(l-1, i));
+        //ret += count(l-1, i); 
+      }
+    }
+  }
+  return ret;
+}
 
 
-void reconstruct(int idx, int length, int order, vector<int> &v)
+void reconstruct(int idx, int order, vector<int> &v)
 {
   //printf("reconstruct: idx = %d, length = %d, order = %d\n", idx, length, order);
+	
+	if(idx != -1)
+		v.push_back(A[idx]);
+
   vector< pair<int, int> > pv;
   int tmp;
   (idx < 0)? tmp = 0 : tmp = A[idx];
@@ -58,21 +82,14 @@ void reconstruct(int idx, int length, int order, vector<int> &v)
   }
   sort(pv.begin(), pv.end());
 
-  if(length == 1 && order > 1){
-    //printf("order when length = 1 : %d\n", order);
-    vector< pair<int, int> >::iterator it = pv.begin();
-    while(order-- > 1) it++;
-    v.push_back(it->first);
-    return; 
-  }
   int k = 0;
   for(vector< pair<int, int> >::iterator it = pv.begin(); it != pv.end(); it++){
     k = order;
-    order -= count(length-1, it->second);
+    order -= count(it->second);
     //printf("k = %d, order = %d, idx = %d, count = %d\n", k, order, it->second, count(length-1, it->second));
     if(order <= 0){
-      v.push_back(it->first);
-      reconstruct(it->second, length-1, k, v);
+      //v.push_back(it->first);
+      reconstruct(it->second, k, v);
       break;
     }
   }

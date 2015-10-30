@@ -1,46 +1,58 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
-int XL[51];
-int YL[51];
+int CL[51];
+int MAX_VAL = 1000000001;
 
 void calc_length()
 {
-  XL[0] = 1; XL[1] = 4; YL[0] = 0; YL[1] = 1;
-  for(int i = 2; i < 51; i++){
-    XL[i] = 2*XL[i-1]+2;
-    YL[i] = 2*YL[i-1]+2;
+  CL[0] = 1;
+  for(int i = 1; i < 51; i++){
+    CL[i] = min(2*CL[i-1]+2, MAX_VAL);
   }
 }
 
-void curve(const string in, int gen, int count)
+void curve(const string in, int gen, int& count, int& end)
 {
-	if(count == 0 && gen == 0){
-		cout << in;	
+  printf("\ncurve : %s, %d, %d, %d\n", in.c_str(), gen, count, end);
+	if(count == 1 && gen == 0){
+    int len = (end > in.length()) ? in.length() : end;
+    for(int i = 0; i < len; i++){
+      cout << in[i];
+      end--;
+    }
 		return;
 	}
 	int len = in.length();
 	for(int i = 0; i < len; i++){
-		if(in[i] == 'X'){
-      if(XL[gen] >= count)
-			  curve("X+YF", gen-1, count);
-      else
-        count -= XL[gen];
-		}
-		else if(in[i] == 'Y'){
-      if(YL[gen] >= count)
-			  curve("FX-Y", gen-1, count);	
-      else
-        count -= YL[gen];
-		}
-		else{
-      if(count > 0)
-        count--;
-      else
-			  cout << in[i];	
-		}
+    if(end > 0){
+		  if(in[i] == 'X'){
+        if(gen > 0 && CL[gen] >= count)
+			    curve("X+YF", gen-1, count, end);
+        else
+          count -= CL[gen];
+		  }
+		  else if(in[i] == 'Y'){
+        if(gen > 0 && CL[gen] >= count)
+			    curve("FX-Y", gen-1, count, end);	
+        else
+          count -= CL[gen];
+		  }
+		  else{
+        if(count > 1)
+          count--;
+        else{
+			    cout << in[i];	
+          end--;
+        }
+		  }
+    }
+    else{
+      return;
+    }
 	}
 }
 
@@ -48,12 +60,17 @@ int main()
 {
 	int C, N, P, L;
   cin >> C;
-  cin >> N >> P >> L;
 	for(int c = 0; c < C; c++){
-    memset(XL, 0, sizeof(int)*51);
-    memset(YL, 0, sizeof(int)*51);
+    cin >> N >> P >> L;
+    memset(CL, 0, sizeof(int)*51);
     calc_length();
-		curve("FX", N, P);
+		curve("FX", N, P, L);
+    cout << endl;
+    /*
+    for(int i = 0; i < 51; i++){
+      printf("XL[%d] = %d, YL[%d] = %d\n", i, XL[i], i, YL[i]);
+    }
+    */
 	}
 	cout << endl;
 	return 0;

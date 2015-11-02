@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;
 
 int CL[51];
-int MAX_VAL = 1000000001;
+int MAX_VAL = 1000000900;
 
 void calc_length()
 {
@@ -17,13 +18,14 @@ void calc_length()
 
 void curve(const string in, int gen, int& count, int& end)
 {
-  printf("\ncurve : %s, %d, %d, %d\n", in.c_str(), gen, count, end);
-	if(count == 1 && gen == 0){
+  //printf("\ncurve : %s, %d, %d, %d\n", in.c_str(), gen, count, end);
+	if(gen == 0){
     int len = (end > in.length()) ? in.length() : end;
     for(int i = 0; i < len; i++){
-      cout << in[i];
+      cout << in[count-1+i];
       end--;
     }
+		count = 1;
 		return;
 	}
 	int len = in.length();
@@ -66,11 +68,6 @@ int main()
     calc_length();
 		curve("FX", N, P, L);
     cout << endl;
-    /*
-    for(int i = 0; i < 51; i++){
-      printf("XL[%d] = %d, YL[%d] = %d\n", i, XL[i], i, YL[i]);
-    }
-    */
 	}
 	cout << endl;
 	return 0;

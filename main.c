@@ -29,9 +29,13 @@ int main() {
     for(int q = 0; q < Q; q++){
         int i; int j;
         scanf("%d %d", &i, &j);
-        C[i]++; // counter up
-        C[i+j]--; // counter down
-        S[i+j] -= j;
+        if(i <= N){
+            C[i]++; // counter up
+            if(i+j <= N){
+                C[i+j]--; // counter down
+                S[i+j] -= j;
+            }
+        }
     }
     
     //calculate sum
@@ -41,10 +45,8 @@ int main() {
         S[i] += ctr + S[i-1];
     }
 
-    for(int i = 1; i <= N; i++) V[i] += S[i];
-    for(int i = 1; i <= N; i++) printf("%lld ", V[i]);
-    
     /*
+    printf("\n");
     printf("V = ");
     for(int i = 0; i <= N; i++)printf("%lld ", V[i]);
     printf("\n");
@@ -56,6 +58,15 @@ int main() {
     printf("S = ");
     for(int i = 0; i <= N; i++)printf("%lld ", S[i]);
     printf("\n");
-    return 0;
     */
+    
+    for(int i = 1; i <= N; i++){
+        V[i] += S[i];
+    }
+    
+    for(int i = 1; i <= N; i++){
+        printf("%lld ", V[i]);
+    }
+    return 0;
+    
 }

@@ -1,17 +1,20 @@
 #include <stdio.h>
+#include <string.h>
 
-int c_board[200][200];
-int board[100][100];
-int visited[100 * 100];
+char c_board[201][201];
+int board[201][201];
+int visited[201 * 201];
 int end_blocks[100 * 100];
 int N, M;
 
 void connected(int src, int i, int j)
 {
+    if(i%2 == 0 || j%2 == 0) return;
 	if (visited[i*100 + j] == 1 || c_board[i][j] == 'O') return;
 	
-	// right
+	// right and lower
 	board[i][j] = src;
+    visited[i*100+j] = 1;
 	if (c_board[i][j + 1] == '.') connected(src, i, j + 2);
 	if (c_board[i + 1][j] == '.') connected(src, i + 2, j);
 }
@@ -22,23 +25,31 @@ int main()
 
 	scanf("%d", &N);
 	scanf("%d", &M);
-	scanf("%f", &K);
-	int dots[100];
-	memset(c_board, 0, sizeof(int) * 202 * 202);
-	memset(blocks, 0, sizeof(int) * 100 * 100);
-	for (int m = 0; m < M; m++){
-		for (int n = 0; n < N; n++){
-			blocks[m * 100 + n] = m * 100 + n;
-			end_blocks[m * 100 + n] = 0;
-		}
-	}
+	scanf("%lf", &K);
+
+	memset(c_board, 0, sizeof(char) * 201 * 201);
+    memset(visited, 0, sizeof(int) * 201 * 201);
 
 	// input
-	for (int i = 1; i <= 2 * M + 1; i++){
-		for (int j = 1; j <= 2 * N + 1; j++){
+	for (int i = 0; i <= 2 * M; i++){
+		for (int j = 0; j <= 2 * N; j++){
 			scanf("%c", &c_board[i][j]);
 		}
 	}
 
+    for(int i = 0; i <= 2*M; i++){
+        for(int j = 0; j <= 2*N; j++){
+            if(i%2 == 1 && j%2 == 1) connected(i*100+j, i, j);
+        }
+    }
 
+    printf("\n");
+    for(int i = 0; i <= 2*M; i++){
+        for(int j = 0; j <= 2*N; j++){
+            printf("%d ", board[i][j]);
+        }
+        printf("\n");
+    }
+    
+    return 0;
 }

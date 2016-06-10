@@ -15,8 +15,11 @@ void connected(int src, int i, int j)
 	// right and lower
 	board[i][j] = src;
     visited[i*100+j] = 1;
-	if (c_board[i][j + 1] == '.') connected(src, i, j + 2);
-	if (c_board[i + 1][j] == '.') connected(src, i + 2, j);
+	if (j < 2*N-2 && c_board[i][j + 1] == '.') connected(src, i, j + 2);
+	if (i < 2*M-2 && c_board[i + 1][j] == '.') connected(src, i + 2, j);
+    if (i > 2 && c_board[i-1][j] == '.') connected(src, i-2, j);
+    if (j > 2 && c_board[i][j - 1] == '.') connected(src, i, j - 2);
+
 }
 
 int main()
@@ -33,6 +36,7 @@ int main()
 	// input
 	for (int i = 0; i <= 2 * M; i++){
 		for (int j = 0; j <= 2 * N; j++){
+            
 			scanf("%c", &c_board[i][j]);
 		}
 	}
